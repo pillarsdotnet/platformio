@@ -1,0 +1,47 @@
+platformio source package
+=========================
+
+platformio is third-party upstream (https://pypi.org/project/platformio/);
+only debian/ is ours. There is no copy of the source in this repository and
+no orig tarball on disk: the sdist is fetched from PyPI at build time by
+.forgejo/registry-upload, which resolves its URL through the PyPI API and
+checks it against debian/upstream/sdist.sha256 before unpacking it.
+
+A version bump is two edits:
+
+ * debian/changelog -- a new entry, version <ver>-1~ppa<N>, UNRELEASED.
+ * debian/upstream/sdist.sha256 -- the new sdist's name and sha256, as
+   "sha256sum platformio-<ver>.tar.gz" would write them.
+
+The script derives the upstream version from the changelog, so those two
+have to agree; a mismatch stops the build before the download.
+
+The build is not dpkg-buildpackage in place. The script copies debian/ into
+the unpacked sdist, builds a source package with dpkg-source -b, unpacks
+that again and builds the binary from the unpacked copy. That extra step is
+what applies debian/patches: dpkg-buildpackage -b in the sdist would skip
+the series entirely and silently produce a package with upstream's own pins.
+
+One debian/ serves noble, resolute and stonking. The committed changelog
+entry carries the packaging version alone and whatever builds it appends the
+series. The package is Architecture: all, but one build still cannot serve
+all three: dh_python3 writes ${python3:Depends} from the packages it finds
+installed, and the three series carry rather different versions of bottle,
+click, starlette and tabulate.
+
+Every pip dependency is in Ubuntu for all three series except ajsonrpc,
+which entered the archive in stonking; noble and resolute take it from the
+Forgejo registry's python-ajsonrpc backport, which registry-upload adds to
+the container's apt sources before resolving build dependencies. Build it
+first if both are new.
+
+Tests are disabled in the build (PYBUILD_DISABLE=test). The sdist carries
+one test module, tests/test_examples.py, and it clones example projects and
+downloads toolchains; debian/tests/control smoke-tests the installed
+package instead.
+
+PlatformIO downloads toolchains, platform definitions and PIO Home into
+~/.platformio at runtime, per project. Its "pio upgrade" and pip self-update
+paths hit PEP 668 on a system install, which is expected and left alone.
+
+ -- Robert August Vincent II (Bob) <pillarsdotnet@gmail.com>  Thu, 05 Nov 2026 10:00:00 -0500

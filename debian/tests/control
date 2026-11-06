@@ -1,0 +1,14 @@
+# The build runs no tests: upstream's one test module needs the network (see
+# debian/rules). These check the installed package instead -- that the module
+# imports, that both entry points run, and that the udev rule landed where
+# udev reads it.
+Test-Command: python3 -c "import platformio; print(platformio.__version__)"
+Depends: @
+Restrictions: allow-stderr
+
+Test-Command: pio --version && platformio --version && piodebuggdb --help >/dev/null
+Depends: @
+Restrictions: allow-stderr
+
+Test-Command: test -f /usr/lib/udev/rules.d/99-platformio-udev.rules
+Depends: @

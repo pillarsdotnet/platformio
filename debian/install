@@ -1,0 +1,4 @@
+# Upstream ships this as package data inside the module, where udev never
+# looks. /usr/lib/udev/rules.d is the path for a package-supplied rule;
+# /etc/udev/rules.d is for local ones.
+platformio/assets/system/99-platformio-udev.rules usr/lib/udev/rules.d

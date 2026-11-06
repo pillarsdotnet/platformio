@@ -1,0 +1,17 @@
+# Only debian/ and .forgejo/ are ours. The upstream source is fetched from
+# PyPI at build time and never lives here, so a working copy of it, the orig
+# tarball and every build artifact are all ignored.
+/*
+!/.forgejo/
+!/debian/
+!/README.md
+!/.gitignore
+
+# Build artifacts inside debian/.
+/debian/.debhelper/
+/debian/debhelper-build-stamp
+/debian/files
+/debian/platformio/
+/debian/platformio.substvars
+/debian/patches/.pc/
+/debian/.pc/

@@ -1,0 +1,52 @@
+Source: platformio
+Section: devel
+Priority: optional
+Maintainer: Robert August Vincent II (Bob) <pillarsdotnet@gmail.com>
+# The runtime dependencies are build dependencies too, and unconditionally so:
+# dh_python3 writes ${python3:Depends} from the packages it finds installed, so
+# a build without one of them ships a deb that does not ask for it and cannot
+# import it. python3-ajsonrpc comes from the Forgejo registry on noble and
+# resolute, whose archives have none; registry-upload adds that apt source
+# before resolving these.
+Build-Depends:
+ debhelper-compat (= 13),
+ dh-sequence-python3,
+ python3-all,
+ python3-setuptools,
+ python3-ajsonrpc,
+ python3-bottle,
+ python3-click,
+ python3-colorama,
+ python3-marshmallow,
+ python3-pip,
+ python3-pyelftools,
+ python3-requests,
+ python3-semantic-version,
+ python3-serial,
+ python3-starlette,
+ python3-tabulate,
+ python3-uvicorn,
+ python3-wsproto,
+Standards-Version: 4.7.0
+Rules-Requires-Root: no
+Homepage: https://platformio.org
+
+Package: platformio
+Architecture: all
+Depends:
+ ${misc:Depends},
+ ${python3:Depends},
+Recommends:
+ udev,
+Description: professional build system for embedded development
+ PlatformIO is a build system and library manager for embedded development.
+ It drives compilers, uploaders and debuggers for several thousand boards
+ across Arduino, ESP32, ESP8266, STM32, mbed, FPGA and other platforms from
+ one project file, and ships the "pio" and "platformio" command-line tools.
+ .
+ Toolchains, platform definitions and PIO Home are not part of this package:
+ PlatformIO downloads them into ~/.platformio on first use, per project.
+ .
+ This build tracks the upstream release from PyPI, which Ubuntu's archives
+ trail badly -- noble carries 4.3.4, and resolute and stonking carry nothing
+ at all.
