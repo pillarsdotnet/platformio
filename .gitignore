@@ -5,6 +5,7 @@
 !/.forgejo/
 !/debian/
 !/README.md
+!/trivy.yaml
 !/.gitignore
 
 # Build artifacts inside debian/.
